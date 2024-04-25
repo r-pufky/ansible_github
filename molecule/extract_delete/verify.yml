@@ -1,0 +1,48 @@
+---
+- name: 'Extract delete | verify | extraction successful'
+  hosts: 'all'
+  gather_facts: false
+  tasks:
+    - name: 'Extract delete | verify | query repo v1.0.0'
+      ansible.builtin.stat:
+        path: '/opt/test_repo_gz/test_repo-v1.0.0'
+      register: _test_github_delete_repo_100
+
+    - name: 'Extract delete | verify | query repo v1.0.1'
+      ansible.builtin.stat:
+        path: '/opt/test_repo_gz/test_repo-v1.0.1'
+      register: _test_github_delete_repo_101
+
+    - name: 'Extract delete | verify | query kept directory'
+      ansible.builtin.stat:
+        path: '/opt/test_repo_gz/this_dir_should_not_be_removed'
+      register: _test_github_delete_dir
+
+    - name: 'Extract delete | verify | query kept file'
+      ansible.builtin.stat:
+        path: '/opt/test_repo_gz/this_file_should_not_be_removed'
+      register: _test_github_delete_file
+
+    - name: 'Extect delete | verify | assert v1.0.0 deleted'
+      ansible.builtin.assert:
+        that: not _test_github_delete_repo_100.stat.exists
+        success_msg: 'v1.0.0 removed correctly.'
+        fail_msg: 'v1.0.0 exists. It should have been deleted.'
+
+    - name: 'Extect delete | verify | assert v1.0.1 exists'
+      ansible.builtin.assert:
+        that: _test_github_delete_repo_101.stat.exists
+        success_msg: 'v1.0.1 exists.'
+        fail_msg: 'v1.0.1 removed. It should exist.'
+
+    - name: 'Extect delete | verify | assert non-repo dir exists'
+      ansible.builtin.assert:
+        that: _test_github_delete_dir.stat.exists
+        success_msg: 'non-repo directory still exists.'
+        fail_msg: 'non-repo directory removed. It should exist.'
+
+    - name: 'Extect delete | verify | assert non-repo file exists'
+      ansible.builtin.assert:
+        that: _test_github_delete_file.stat.exists
+        success_msg: 'non-repo file still exists.'
+        fail_msg: 'non-repo file removed. It should exist.'

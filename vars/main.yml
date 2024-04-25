@@ -1,0 +1,13 @@
+---
+###############################################################################
+# Github REST API
+###############################################################################
+#
+# Reference:
+# * https://docs.github.com/en/rest?api
+# * https://docs.github.com/en/rest/about-the-rest-api/api-versions
+
+github_default_release_url_base: 'https://api.github.com/repos'
+
+# Role checked against this version of the API.
+github_default_api_version: '2022-11-28'

@@ -1,0 +1,12 @@
+---
+- name: 'Live API test | prepare'
+  hosts: 'all'
+  gather_facts: false
+  tasks:
+    - name: 'Live API test | prepare | base packages for bare-metal equivalency'
+      ansible.builtin.apt:
+        name:
+          - 'ca-certificates'  # SSL support for ansible.builtin.get_url.
+          - 'rsync'  # ansible.posix.synchronize.
+        update_cache: true
+        state: 'present'

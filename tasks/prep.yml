@@ -1,0 +1,85 @@
+---
+# yamllint disable rule:line-length
+###############################################################################
+# Github Prep
+###############################################################################
+# Prep github environment for release download management.
+#
+# API Endpoints:
+# * https://api.github.com/repos/{USER}/{REPO}/releases/latest
+# * https://api.github.com/repos/{USER}/{REPO}/releases/tags/{VERSION}
+# Access tokens must have 'contents:read' permissions.
+#
+# Install Methodology:
+# * If testing, extract sourced testing archive, set variables and exit.
+# * Determine version or 'latest' version to use.
+# * Install dependencies for downloading.
+# * Download to staging directory.
+# * Extract archive to target location.
+# * Set target permissions.
+# * Cleanup staged file if enabled.
+#
+# Generates:
+#   _github_target: str full version (vx.x.x) to install.
+#   _github_target_url: str download url for target release.
+#   _github_archive: str local versioned archive location.
+#   _github_dir: str local versioned target location.
+#   _github_remote_metadata: dict release metadata for requested version.
+#   _github_staging_stat: stat for existing staging location.
+#   _github_extract_stat: stat for existing extract location.
+#   _github_archive_stat: stat for existing archive locaiton.
+#
+# Reference:
+# * https://docs.github.com/en/rest/releases
+
+- name: 'Prep | get release metadata'
+  ansible.builtin.uri:
+    url: '{{ github_default_release_url_base }}/{{ github_repo_owner }}/{{ github_repo_repo }}/releases/{{ "tags/" if github_repo_release != "latest" }}{{ github_repo_release }}'
+    return_content: true
+    headers:
+      Authorization: '{{ github_personal_access_token | default(omit) }}'
+  register: _github_remote_metadata
+  when: not github_testing_enable
+
+- name: 'Testing | inject get release metadata'
+  ansible.builtin.set_fact:
+    _github_remote_metadata: '{{ {"json": {"tag_name": "{{ github_testing_version }}", "tarball_url": "http://example.com/tar", "zipball_url": "http://example.com/zip"}} }}'
+  when: github_testing_enable
+
+- name: 'Prep | parse release metadata'
+  ansible.builtin.set_fact:
+    _github_target: '{{ _github_remote_metadata.json.tag_name }}'
+    _github_target_url: '{{ _github_remote_metadata.json.tarball_url if github_repo_archive_type.startswith("tar") else _github_remote_metadata.json.zipball_url }}'
+
+- name: 'Prep | generate locations'
+  ansible.builtin.set_fact:
+    _github_archive: '{{ github_staging_dir }}/{{ github_repo_repo }}-{{ _github_target }}.{{ github_repo_archive_type }}'
+    _github_dir: '{{ github_extract_dest }}/{{ github_repo_repo }}-{{ _github_target }}'
+
+- name: 'Prep | force overwrite enabled'
+  when: github_force_overwrite
+  block:
+    - name: 'Prep | remove cached downloaded archive'
+      ansible.builtin.file:
+        path: '{{ _github_archive }}'
+        state: 'absent'
+
+    - name: 'Prep | remove cached extracted release'
+      ansible.builtin.file:
+        path: '{{ _github_dir }}'
+        state: 'absent'
+
+- name: 'Prep | check archive location'
+  ansible.builtin.stat:
+    path: '{{ _github_archive }}'
+  register: _github_archive_stat
+
+- name: 'Prep | check staging directory'
+  ansible.builtin.stat:
+    path: '{{ github_staging_dir }}'
+  register: _github_staging_stat
+
+- name: 'Prep | check extract directory'
+  ansible.builtin.stat:
+    path: '{{ _github_dir }}'
+  register: _github_extract_stat

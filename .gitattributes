@@ -1,0 +1,2 @@
+molecule/default/files/** filter=lfs diff=lfs merge=lfs -text
+molecule/extract_delete/files/** filter=lfs diff=lfs merge=lfs -text

@@ -1,0 +1,107 @@
+# Github Release Download Manager
+Easily download and extract latest source releases from github repositories.
+
+## Requirements
+[supported platforms](https://github.com/r-pufky/ansible_github/blob/main/meta/main.yml)
+
+[collections/roles](https://github.com/r-pufky/ansible_github/blob/main/meta/requirements.yml)
+
+## Role Variables
+[defaults](https://github.com/r-pufky/ansible_github/tree/main/defaults/main/)
+
+### Generated Variables
+After successful execution the following variables are available for further
+manipulation of extracted release during the same play (standard role variable
+scope):
+
+ Variable                | type | Description
+-------------------------|------|-----------------------------------------
+ _github_target          | str  | full version release tag.
+ _github_target_url      | str  | download url for target release.
+ _github_archive         | str  | local versioned archive location.
+ _github_dir             | str  | local versioned extract location.
+ _github_remote_metadata | dict | release metadata for requested version.
+
+## Dependencies
+N/A
+
+## Example Playbook
+This role is intended to be called multiple times in other roles with most
+options being set per repository release being downloaded.
+
+group_vars/all/main.yml
+``` yaml
+# Accessible to all hosts which will consume this role.
+github_personal_access_token: '{ACCESS TOKEN FROM GITHUB}'
+```
+
+roles/my_custom_role/tasks/task.yml
+``` yaml
+- name: 'download and extract latest release'
+  ansible.builtin.include_role:
+    name: 'r_pufky.srv.github'
+  vars:
+    github_repo_owner: 'sct'
+    github_repo_repo: 'overseerr'
+    github_repo_release: 'latest'
+    github_repo_archive_type: 'tar'
+    github_file_owner: 'overseerr'
+    github_file_group: 'overseerr'
+    github_extract_dest: '/opt/overseerr'
+    github_extract_mode: 'a-st,o-rwx'
+    github_extract_extra_opts: '--strip-components=1'
+    github_extract_remove_files:
+      - 'README.md'
+      - 'config/.keep'
+```
+
+## Testing in other Roles
+Testing may be toggled on the role to facilitate testing other roles which
+consume this role, removing the need to hammer the github REST API or download
+archive files.
+
+group_vars/archives:
+```
+project_v1.0.0.tar.gz
+project_v1.0.1.tar.gz
+```
+
+roles/my_custom_role/molecule/molecule.yml
+``` yaml
+provisioner:
+  inventory:
+    group_vars:
+      all:
+        github_testing_enable: true
+        github_testing_version: 'v1.0.0'
+        github_testing_archive: 'group_vars/archives/project_v1.0.0.tar.gz'
+```
+When the role is called during testing, version queries will always return
+`v1.0.0` and the github download will be simulated by synchronizing the
+specified archive from the ansible controller to the testing node.
+
+## Unit Testing
+Test framework requires molecule and rootless podman setup.
+
+Run all unit tests:
+``` bash
+molecule test --all
+```
+
+Run integration tests against live API:
+```
+molecule test -s live_api_test -- -v -e 'cli_github_live_api_test_enable=true,github_personal_access_token={TOKEN}'
+```
+
+## Issues
+Create a bug and provide as much information as possible.
+
+Associate pull requests with a submitted bug.
+
+## License
+[AGPL-3.0 License](https://www.tldrlegal.com/license/gnu-affero-general-public-license-v3-agpl-3-0)
+ [(direct link)](https://github.com/r-pufky/ansible_fonts/blob/main/LICENSE)
+
+## Author Information
+PGP Fingerprint: [466EEC2B67516C7117C85CE3A0BC35D16698BAB9](https://keys.openpgp.org/vks/v1/by-fingerprint/466EEC2B67516C7117C85CE3A0BC35D16698BAB9)
+| [github gist](https://gist.github.com/r-pufky/a8df36977c55b5bb20829267c4c49d22)

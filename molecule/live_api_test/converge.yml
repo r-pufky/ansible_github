@@ -1,0 +1,49 @@
+---
+# yamllint disable rule:line-length
+# Integration test against a live github repository for download and
+# extraction. This confirms the API endpoints are processed correctly and
+# should only be run as one-off test before releasing.
+#
+# Set cli_github_live_api_test_enable: true to test live API commands.
+#
+#   molecule test -s live_api_test -- -v -e 'cli_github_live_api_test_enable=true'
+#
+# Additionally, a github token may be provided to test authenticatd API use:
+#
+#   molecule test -s live_api_test -- -v -e 'cli_github_live_api_test_enable=true,github_personal_access_token={TOKEN}'
+#
+# Idempotent testing disabled as specific commands will never be idempotent.
+#
+# Reference:
+# * https://github.com/ansible/molecule/issues/816
+
+- name: 'Live API test | converge'
+  hosts: all
+  gather_facts: true
+  tags: 'molecule-idempotence-notest'
+  tasks:
+    - name: 'Live API test | converge | test live API access'
+      ansible.builtin.include_role:
+        name: 'github'
+      vars:
+        github_repo_archive_type: 'tar.gz'
+        github_repo_owner: 'roundcube'
+        github_repo_repo: 'roundcubemail'
+        github_repo_release: 'latest'
+        github_file_owner: 'root'
+        github_file_group: 'root'
+        github_extract_dest: '/opt/roundcube'
+        github_extract_extra_opts: '--strip-components=1'
+        github_extract_mode: 'a-st,o-rwx'
+        github_extract_remove_files:
+          - 'README.md'
+          - 'UPGRADING'
+          - 'config/config.inc.php.sample'
+      when: cli_github_live_api_test_enable
+
+    - name: 'Live API test | converge | live API test disabled'
+      ansible.builtin.debug:
+        msg: >
+          Live API test disabled. Set 'cli_github_live_api_test_enable: true'
+          to enable testing. See: molecule/live_api_test/converge.yml
+      when: not cli_github_live_api_test_enable

@@ -1,0 +1,163 @@
+---
+# yamllint disable rule:line-length
+###############################################################################
+# Github Role Configuration
+###############################################################################
+# Github release download mananger.
+#
+# Determines 'latest' github repository version (or specified version) then
+# downloads, extracts, and stages that release in a given location.
+#
+# Archive will NOT be redownloaded if a cached version exists and will NOT be
+# re-extracted if the extracted directory already exists; unless
+# github_force_overwrite is set.
+#
+# Authenticated API requests are HIGHLY recommended to prevent 403 usage
+# denials.
+#
+# Reference:
+# * https://docs.github.com/en/rest?api
+
+# Github personal access token.
+# Unauthenticated github API requests are heavily restricted and will cause
+# this role to fail with 403's if used frequently. Ether classic or
+# fine-grained tokens may be used.
+#
+# Classic Tokens:
+# * settings -> developer settings -> personal access tokens (classic)
+#   * notes: {LABEL APPROPRIATELY}
+#   * expiration: {CUSTOM}
+#   * scopes: NONE
+#
+# Fine-grained Tokens:
+# * settings -> developer settings -> personal access tokens (fine-grained)
+#   * token name: {LABEL APPROPRIATELY}
+#   * expiration: {CUSTOM}
+#   * description: {DESCRIPTVE TEXT}
+#   * resource owner: {YOUR ACCOUNT}
+#   * repository access: Public Repositories (read-only)
+#
+# Default: '' (anonymous).
+#
+# Reference:
+# * https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens#creating-a-personal-access-token-classic
+github_personal_access_token: ''
+
+# Staging area for downloaded releases.
+# Archive will be downloaded to this location. Location will be created using
+# github_user, github_group, with 0755 permissions if it does not exist.
+#
+# Default: '/tmp'.
+github_staging_dir: '/tmp'
+
+# Force archive download and extraction.
+# By default the archive will NOT be redownloaded if a cached version exists
+# and will not be re-extracted if the extracted directory already exists.
+#
+# Default: False.
+github_force_overwrite: false
+
+# Clean staged files after finished? Default: True.
+github_staging_clean: true
+
+###############################################################################
+# Github local file permissions
+###############################################################################
+# Downloaded and extracted file user permissions. User must be managed
+# externally.
+
+# Local files owner. Default: 'root'.
+github_file_owner: 'root'
+
+# Local files group. Default: 'root'.
+github_file_group: 'root'
+
+###############################################################################
+# Github repository
+###############################################################################
+# Github repository owner. Default: ''.
+github_repo_owner: ''
+
+# Github repository name. Default: ''.
+github_repo_repo: ''
+
+# Github repository release. Default: 'latest'.
+github_repo_release: 'latest'
+
+# Github repository archive type.
+#
+# Values:
+#   'tar.*': Download tarball release.
+#   'zip': Download zipball release.
+#
+# Default: 'tar.gz'.
+github_repo_archive_type: 'tar.gz'
+
+###############################################################################
+# Github local file permissions
+###############################################################################
+# Options per ansible.builtin.unarchive.
+#
+# Reference:
+# * https://docs.ansible.com/ansible/latest/collections/ansible/builtin/unarchive_module.html
+
+# Extracted archive directory base.
+# Archive will be extracted to this location in a sub directory with the format
+# github_extract_dest/{REPO}-{VERSION}.
+#
+# Location will be created using github_user, github_group, and
+# github_extract_mode if non-existing.
+#
+# github_repo_repo: 'myrepo'
+# github_repo_release: 'latest'
+# github_extract_dest: '/opt/myrepo'
+#
+# Results (if latest version is v1.0.0): /opt/myrepo/myrepo-v1.0.0
+#
+# Default: '/tmp'.
+github_extract_dest: '/tmp'
+
+# Create a symlink to the versioned extracted archive?
+# Symlink will be FORCE created, linking the extracted versioned archive to the
+# specifid location.
+#
+# github_repo_repo: 'myrepo'
+# github_repo_release: 'latest'
+# github_extract_dest: '/opt/myrepo'
+# github_extract_symlink_target: 'opt/myrepo/myrepo'
+#
+# Results (if latest version is v1.0.0): /opt/myrepo/myrepo -> /opt/myrepo/myrepo-v1.0.0
+#
+# Equivalent to: ln -s -f /opt/myrepo/myrepo-v1.0.0 /opt/myrepo/myrepo
+#
+# Default: '' (disabled).
+github_extract_symlink_target: ''
+
+# Apply permissions to extracted files.
+# Explicitly set extraction mode to avoid CVE-2020-1736.
+#
+# Default: 'a-st,o-rwx' (remove setuid, setgid, others).
+#
+# Reference:
+# * https://nvd.nist.gov/vuln/detail/CVE-2020-1736
+github_extract_mode: 'a-st,o-rwx'
+
+# Extra options to apply to unarchiving tool.
+# Most archives extract with archive name as base directory; stripping the
+# first component will extract directly into destination.
+#
+# Default: '--strip-components=1'.
+github_extract_extra_opts: '--strip-components=1'
+
+# List of extracted files to remove. Default: [] (none).
+github_extract_remove_files: []
+
+# Delete old extracted archive versions?
+# Existing directories in github_extract_dest will be deleted if they do *NOT*
+# match the current specified version. Only directories matching
+# github_repo_repo will be considered for deletion.
+#
+# This is data destructive. Ensure user data is stored somewhere else.
+#
+# Default: False.
+github_extract_delete_old_versions: false

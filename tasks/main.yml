@@ -1,0 +1,7 @@
+---
+- name: 'Main | prep'
+  ansible.builtin.include_tasks: prep.yml
+- name: 'Main | download'
+  ansible.builtin.include_tasks: download.yml
+- name: 'Main | extract'
+  ansible.builtin.include_tasks: extract.yml

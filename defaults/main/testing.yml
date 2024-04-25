@@ -1,0 +1,21 @@
+---
+###############################################################################
+# Github Release Download Manager Testing
+###############################################################################
+# Options exposed specifically for unit testing dependent roles without
+# hammering github API's. These are not needed in normal operation.
+
+# Enable testing.
+# This will disable API use and instead return testing values for requested
+# versions as well as a locally sourced archive to extract in place of
+# downloading the file from the github endpoint.
+#
+# Default: False.
+github_testing_enable: false
+
+# Release version simulated to return. Default: ''.
+github_testing_version: ''
+
+# Source location of archive on ansible host to simulate downloading.
+# Default: ''.
+github_testing_archive: ''

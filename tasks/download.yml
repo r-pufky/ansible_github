@@ -1,0 +1,61 @@
+---
+# yamllint disable rule:line-length
+###############################################################################
+# Github Download
+###############################################################################
+# Download and validate archive release package from github, using specified
+# version.
+#
+# Args:
+#   _github_target: str full version (vx.x.x) to install.
+#   _github_target_url: str download url for target release.
+#   _github_archive: str local versioned archive location.
+#   _github_staging_stat: stat for existing staging location.
+
+- name: 'Download | create staging directory'
+  ansible.builtin.file:
+    path: '{{ github_staging_dir }}'
+    owner: '{{ github_file_owner }}'
+    group: '{{ github_file_group }}'
+    mode: '0755'
+    state: 'directory'
+  when: not _github_staging_stat.stat.exists
+
+- name: 'Download | {{ github_repo_repo }} {{ _github_target }}'  # noqa name[template] show full repo version
+  ansible.builtin.get_url:
+    url: '{{ _github_target_url }}'
+    dest: '{{ _github_archive }}'
+    owner: '{{ github_file_owner }}'
+    group: '{{ github_file_group }}'
+    mode: '{{ github_extract_mode }}'
+    headers:
+      Authorization: '{{ github_personal_access_token | default(omit) }}'
+  register: _github_download
+  until: _github_download is succeeded
+  retries: 5
+  delay: 2
+  when: >
+    not _github_archive_stat.stat.exists and
+    not github_testing_enable
+
+# TODO(2.19): Deprecation warning removed in ansible 2.19. stdin is **not**
+#     used in the synchronize module and is a spurious warning.
+#
+# Reference:
+# * https://github.com/ansible-collections/ansible.posix/pull/421
+- name: 'Testing | inject archive download'
+  ansible.posix.synchronize:
+    src: '{{ github_testing_archive }}'
+    dest: '{{ _github_archive }}'
+    archive: false
+    checksum: true
+  when: github_testing_enable
+
+- name: 'Testing | inject archive permissions'
+  ansible.builtin.file:
+    path: '{{ _github_archive }}'
+    owner: '{{ github_file_owner }}'
+    group: '{{ github_file_group }}'
+    mode: '{{ github_extract_mode }}'
+    state: 'file'
+  when: github_testing_enable

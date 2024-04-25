@@ -1,0 +1,12 @@
+---
+# yamllint disable rule:line-length
+- name: 'Extract delete | prepare'
+  hosts: 'all'
+  gather_facts: false
+  tasks:
+    - name: 'Extract delete | prepare | base packages for bare-metal equivalency'
+      ansible.builtin.apt:
+        name:
+          - 'rsync'  # ansible.posix.synchronize.
+        update_cache: true
+        state: 'present'

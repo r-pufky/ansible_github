@@ -7,7 +7,5 @@
       ansible.builtin.apt:
         name:
           - 'rsync'  # ansible.posix.synchronize.
-          - 'unzip'  # ansible.builtin.unarchive.
-          - 'xz-utils'  # ansible.builtin.unarchive.
         update_cache: true
         state: 'present'

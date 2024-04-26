@@ -1,0 +1,10 @@
+---
+###############################################################################
+# Github Packages
+###############################################################################
+# Packages for github download and extraction.
+
+- name: 'Packages | install'
+  ansible.builtin.apt:
+    name: '{{ github_default_packages }}'
+    state: 'present'

@@ -69,9 +69,6 @@
     fail_msg: 'symlink exists. It should not exist.'
   when: item.symlink | length == 0
 
-- ansible.builtin.debug:
-    msg: '{{ _test_github_symlink.stat }}'
-
 - name: 'Default | verify | symlink created'
   ansible.builtin.assert:
     that:

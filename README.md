@@ -44,7 +44,7 @@ roles/my_custom_role/tasks/task.yml
     github_repo_owner: 'sct'
     github_repo_repo: 'overseerr'
     github_repo_release: 'latest'
-    github_repo_archive_type: 'tar'
+    github_repo_archive_type: 'tar.gz'
     github_file_owner: 'overseerr'
     github_file_group: 'overseerr'
     github_extract_dest: '/opt/overseerr'
@@ -100,7 +100,7 @@ Associate pull requests with a submitted bug.
 
 ## License
 [AGPL-3.0 License](https://www.tldrlegal.com/license/gnu-affero-general-public-license-v3-agpl-3-0)
- [(direct link)](https://github.com/r-pufky/ansible_fonts/blob/main/LICENSE)
+ [(direct link)](https://github.com/r-pufky/ansible_github/blob/main/LICENSE)
 
 ## Author Information
 PGP Fingerprint: [466EEC2B67516C7117C85CE3A0BC35D16698BAB9](https://keys.openpgp.org/vks/v1/by-fingerprint/466EEC2B67516C7117C85CE3A0BC35D16698BAB9)

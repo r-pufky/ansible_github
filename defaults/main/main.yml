@@ -124,7 +124,7 @@ github_extract_dest: '/tmp'
 # github_repo_repo: 'myrepo'
 # github_repo_release: 'latest'
 # github_extract_dest: '/opt/myrepo'
-# github_extract_symlink_target: 'opt/myrepo/myrepo'
+# github_extract_symlink_target: '/opt/myrepo/myrepo'
 #
 # Results (if latest version is v1.0.0): /opt/myrepo/myrepo -> /opt/myrepo/myrepo-v1.0.0
 #

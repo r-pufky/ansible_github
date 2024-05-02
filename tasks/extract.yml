@@ -45,6 +45,7 @@
     dest: '{{ github_extract_symlink_target }}'
     owner: '{{ github_file_owner }}'
     group: '{{ github_file_group }}'
+    force: true
     state: 'link'
   when: github_extract_symlink_target
 

@@ -4,7 +4,7 @@
   gather_facts: false
   tasks:
     - name: 'Default | verify | test extraction'
-      ansible.builtin.include_tasks: tests/test_extraction.yml
+      ansible.builtin.include_tasks: 'tests/test_extraction.yml'
       loop:
         - type: 'tar.gz'
           path: '/opt/test_repo_gz/test_repo-v1.0.0'

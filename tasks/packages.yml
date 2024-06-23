@@ -6,5 +6,5 @@
 
 - name: 'Packages | install'
   ansible.builtin.apt:
-    name: '{{ github_default_packages }}'
-    state: 'present'
+    name: '{{ github_role_packages }}'
+    state: '{{ github_role_package_state }}'

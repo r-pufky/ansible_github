@@ -7,11 +7,20 @@
 # * https://docs.github.com/en/rest?api
 # * https://docs.github.com/en/rest/about-the-rest-api/api-versions
 
-github_default_release_url_base: 'https://api.github.com/repos'
+# Last time github options were validated against a default configuration.
+github_role_validate_date: '2024-06-22'
+github_role_validate_release: 'bookworm'
 
 # Role checked against this version of the API.
-github_default_api_version: '2022-11-28'
+github_role_api_version: '2022-11-28'
 
-github_default_packages:
+# Default packages for github.
+github_role_packages:
   - 'unzip'
   - 'xz-utils'
+
+# Default state for apt package installation. See ansible.builtin.apt.
+github_role_package_state: 'present'
+
+# Github API base URL.
+github_role_release_url_base: 'https://api.github.com/repos'

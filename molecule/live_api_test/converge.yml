@@ -8,7 +8,7 @@
 #
 #   molecule test -s live_api_test -- -v -e 'cli_github_live_api_test_enable=true'
 #
-# Additionally, a github token may be provided to test authenticatd API use:
+# Additionally, a github token may be provided to test authenticated API use:
 #
 #   molecule test -s live_api_test -- -v -e 'cli_github_live_api_test_enable=true,github_personal_access_token={TOKEN}'
 #
@@ -24,7 +24,7 @@
   tasks:
     - name: 'Live API test | converge | test live API access'
       ansible.builtin.include_role:
-        name: 'github'
+        name: 'r_pufky.srv.github'
       vars:
         github_repo_archive_type: 'tar.gz'
         github_repo_owner: 'roundcube'

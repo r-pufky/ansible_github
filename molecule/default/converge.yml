@@ -1,7 +1,7 @@
 ---
-# role variable returned variables are scoped to the current play only (e.g.
+# Role variable returned variables are scoped to the current play only (e.g.
 # converge.yml) and must be tested between each application of the role. Test
-# these values while converging versus verify.yml (where scoping wll prevent)
+# these values while converging versus verify.yml (where scoping will prevent)
 # testing these values.
 #
 # Idempotent testing disabled as specific commands will never be idempotent.
@@ -16,7 +16,7 @@
   tasks:
     - name: 'Default | converge | test tar.gz release'
       ansible.builtin.include_role:
-        name: 'github'
+        name: 'r_pufky.srv.github'
       vars:
         github_testing_archive: 'files/test_archive_v1.0.0.tar.gz'
         github_repo_archive_type: 'tar.gz'
@@ -43,7 +43,7 @@
 
     - name: 'Default | converge | test tar.xz release'
       ansible.builtin.include_role:
-        name: 'github'
+        name: 'r_pufky.srv.github'
       vars:
         github_testing_archive: 'files/test_archive_v1.0.0.tar.xz'
         github_repo_archive_type: 'tar.xz'
@@ -70,7 +70,7 @@
 
     - name: 'Default | converge | test zip release'
       ansible.builtin.include_role:
-        name: 'github'
+        name: 'r_pufky.srv.github'
       vars:
         github_testing_archive: 'files/test_archive_v1.0.0.zip'
         github_staging_clean: false

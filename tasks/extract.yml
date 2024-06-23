@@ -6,9 +6,9 @@
 # Create versioned directory and unpack 'complete' archive.
 #
 # Args:
-#   _github_archive: str local versioned archive location.
-#   _github_dir: str local versioned extract location.
-#   _github_extract_stat: stat for existing extract location.
+#   _github_archive: str - local versioned archive location
+#   _github_dir: str - local versioned extract location
+#   _github_extract_stat: stat - for existing extract location
 
 - name: 'Extract | create extract directory'
   ansible.builtin.file:

@@ -7,10 +7,10 @@
 # version.
 #
 # Args:
-#   _github_target: str full version (vx.x.x) to install.
-#   _github_target_url: str download url for target release.
-#   _github_archive: str local versioned archive location.
-#   _github_staging_stat: stat for existing staging location.
+#   _github_target: str - full version (vx.x.x) to install
+#   _github_target_url: str - download url for target release
+#   _github_archive: str - local versioned archive location
+#   _github_staging_stat: stat - for existing staging location
 
 - name: 'Download | create staging directory'
   ansible.builtin.file:

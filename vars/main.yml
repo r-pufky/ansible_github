@@ -19,6 +19,9 @@ github_role_packages:
   - 'unzip'
   - 'xz-utils'
 
+github_role_testing_packages:
+  - 'rsync'
+
 # Default state for apt package installation. See ansible.builtin.apt.
 github_role_package_state: 'present'
 

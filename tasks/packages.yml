@@ -6,5 +6,8 @@
 
 - name: 'Packages | install'
   ansible.builtin.apt:
-    name: '{{ github_role_packages }}'
+    name: '{{ item }}'
     state: '{{ github_role_package_state }}'
+  loop:
+    - '{{ github_role_packages }}'
+    - '{{ github_role_testing_packages if github_testing_enable else "" }}'

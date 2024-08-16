@@ -24,8 +24,8 @@
     src: '{{ _github_archive }}'
     remote_src: true
     dest: '{{ _github_dir }}'
-    owner: '{{ github_owner | default("root", true) }}'
-    group: '{{ github_group | default("root", true) }}'
+    owner: '{{ github_file_owner | default("root", true) }}'
+    group: '{{ github_file_group | default("root", true) }}'
     mode: '{{ github_extract_mode | default("0644", true) }}'
     extra_opts: '{{ github_extract_extra_opts | default(omit, true) }}'
   when: not _github_extract_stat.stat.exists

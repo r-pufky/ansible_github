@@ -20,31 +20,33 @@
 # * Cleanup staged file if enabled.
 #
 # Generates:
+#   _github_staging_stat: stat - for existing staging location
+#   _github_extract_stat: stat - for existing extract location
+#   _github_archive_stat: stat - for existing archive location
+#
+# Exports:
 #   _github_target: str - full version (vx.x.x) to install
 #   _github_target_url: str - download url for target release
 #   _github_archive: str - local versioned archive location
 #   _github_dir: str - local versioned target location
 #   _github_remote_metadata: dict - release metadata for requested version
-#   _github_staging_stat: stat - for existing staging location
-#   _github_extract_stat: stat - for existing extract location
-#   _github_archive_stat: stat - for existing archive location
 #
 # Reference:
 # * https://docs.github.com/en/rest/releases
 
 - name: 'Prep | get release metadata'
+  when: not (github_testing_enable | default(false))
   ansible.builtin.uri:
     url: '{{ github_role_release_url_base }}/{{ github_repo_owner }}/{{ github_repo_repo }}/releases/{{ "tags/" if github_repo_release != "latest" }}{{ github_repo_release }}'
     return_content: true
     headers:
       Authorization: '{{ github_personal_access_token | default(omit) }}'
   register: _github_remote_metadata
-  when: not github_testing_enable
 
 - name: 'Testing | inject get release metadata'
+  when: (github_testing_enable | default(false))
   ansible.builtin.set_fact:
     _github_remote_metadata: '{{ {"json": {"tag_name": "{{ github_testing_version }}", "tarball_url": "http://example.com/tar", "zipball_url": "http://example.com/zip"}} }}'
-  when: github_testing_enable
 
 - name: 'Prep | parse release metadata'
   ansible.builtin.set_fact:

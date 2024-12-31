@@ -66,6 +66,9 @@ github_force_overwrite: false
 # Clean staged files after finished? Default: True.
 github_staging_clean: true
 
+# Retry download number of times before failing. Default: 5.
+github_download_retries: 5
+
 ###############################################################################
 # Github local file permissions
 ###############################################################################
@@ -81,6 +84,7 @@ github_file_group: 'root'
 ###############################################################################
 # Github repository
 ###############################################################################
+
 # Github repository owner. Default: ''.
 github_repo_owner: ''
 

@@ -4,17 +4,14 @@
 # these values while converging versus verify.yml (where scoping will prevent)
 # testing these values.
 #
-# Idempotent testing disabled as specific commands will never be idempotent.
-#
 # Reference:
 # * https://github.com/ansible/molecule/issues/816
 
 - name: 'Extract delete | converge'
-  hosts: all
-  gather_facts: true
-  tags: 'molecule-idempotence-notest'
+  hosts: 'all'
+  gather_facts: false
   tasks:
-    - name: 'Extract delete | converge | extract v1.0.0 release'
+    - name: 'Extract delete | converge | apply r_pufky.srv.github (v1.0.0)'
       ansible.builtin.include_role:
         name: 'r_pufky.srv.github'
       vars:
@@ -49,7 +46,7 @@
         mode: '0755'
         state: 'touch'
 
-    - name: 'Extract delete | converge | extract v1.0.1 release'
+    - name: 'Extract delete | converge | apply r_pufky.srv.github (v1.0.1)'
       ansible.builtin.include_role:
         name: 'r_pufky.srv.github'
       vars:

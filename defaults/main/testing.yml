@@ -1,4 +1,5 @@
 ---
+# yamllint disable rule:line-length
 ###############################################################################
 # Github Release Download Manager Testing
 ###############################################################################
@@ -10,6 +11,8 @@
 # This will disable API use and instead return testing values for requested
 # versions as well as a locally sourced archive to extract in place of
 # downloading the file from the github endpoint.
+#
+# molecule test -s live_api_test -- -v -e 'github_testing_enable=true,github_personal_access_token={TOKEN}'
 #
 # Default: False.
 github_testing_enable: false

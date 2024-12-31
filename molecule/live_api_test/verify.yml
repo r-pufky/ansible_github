@@ -5,7 +5,7 @@
   gather_facts: false
   tasks:
     - name: 'Live API test | verify | live API extraction'
-      when: cli_github_live_api_test_enable
+      when: github_testing_enable
       block:
         - name: 'Live API test | verify | find extracted archive'
           ansible.builtin.find:
@@ -48,8 +48,8 @@
             fail_msg: 'file have not been removed.'
 
     - name: 'Live API test | converge | live API test disabled'
+      when: not github_testing_enable
       ansible.builtin.debug:
         msg: >
-          Live API test disabled. Set 'cli_github_live_api_test_enable: true'
+          Live API test disabled. Set 'github_testing_enable: true'
           to enable testing. See: molecule/live_api_test/converge.yml
-      when: not cli_github_live_api_test_enable

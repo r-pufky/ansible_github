@@ -3,7 +3,7 @@
   hosts: 'all'
   gather_facts: false
   tasks:
-    - name: 'Default | prepare | base packages for bare-metal equivalency'
+    - name: 'Default | prepare | install packages for verify'
       ansible.builtin.apt:
         name:
           - 'rsync'  # ansible.posix.synchronize

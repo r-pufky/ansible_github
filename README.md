@@ -16,14 +16,15 @@ scope):
 
  Variable                | type | Description
 -------------------------|------|-----------------------------------------
- _github_target          | str  | full version release tag.
- _github_target_url      | str  | download url for target release.
- _github_archive         | str  | local versioned archive location.
- _github_dir             | str  | local versioned extract location.
- _github_remote_metadata | dict | release metadata for requested version.
+ _github_target          | str  | Full version release tag.
+ _github_target_url      | str  | Download url for target release.
+ _github_archive         | str  | Local versioned archive location.
+ _github_dir             | str  | Local versioned extract location.
+ _github_remote_metadata | dict | Release metadata for requested version.
 
 ## Dependencies
-N/A
+Part of the [r_pufky.srv](https://github.com/r-pufky/ansible_collection_srv)
+collection.
 
 ## Example Playbook
 This role is intended to be called multiple times in other roles with most
@@ -55,7 +56,20 @@ roles/my_custom_role/tasks/task.yml
       - 'config/.keep'
 ```
 
-## Testing in other Roles
+## Development
+Configure [environment](https://github.com/r-pufky/ansible_collection_srv/blob/main/docs/dev/environment/README.md)
+
+Run all unit tests:
+``` bash
+molecule test --all
+```
+
+Run integration tests against live API:
+```
+molecule test -s live_api_test -- -v -e 'github_testing_enable=true,github_personal_access_token={TOKEN}'
+```
+
+### Testing in other Roles
 Testing may be toggled on the role to facilitate testing other roles which
 consume this role, removing the need to hammer the github REST API or download
 archive files.
@@ -80,20 +94,7 @@ When the role is called during testing, version queries will always return
 `v1.0.0` and the github download will be simulated by synchronizing the
 specified archive from the ansible controller to the testing node.
 
-## Unit Testing
-Test framework requires molecule and rootless podman setup.
-
-Run all unit tests:
-``` bash
-molecule test --all
-```
-
-Run integration tests against live API:
-```
-molecule test -s live_api_test -- -v -e 'cli_github_live_api_test_enable=true,github_personal_access_token={TOKEN}'
-```
-
-## Issues
+### Issues
 Create a bug and provide as much information as possible.
 
 Associate pull requests with a submitted bug.

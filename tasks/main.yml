@@ -1,8 +1,15 @@
 ---
+
+- name: 'Install packages'
+  ansible.builtin.include_role:
+    name: 'r_pufky.srv.apt'
+  vars:
+    apt_packages:
+      - '{{ github_role_packages }}'
+    apt_package_update_cache: true
+
 - name: 'Prep'
   ansible.builtin.include_tasks: 'prep.yml'
-- name: 'Packages'
-  ansible.builtin.include_tasks: 'packages.yml'
 - name: 'Download'
   ansible.builtin.include_tasks: 'download.yml'
 - name: 'Extract'

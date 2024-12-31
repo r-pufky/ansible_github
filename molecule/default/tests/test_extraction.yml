@@ -39,18 +39,18 @@
   register: _test_github_extra_opts
 
 - name: 'Default | verify | {{ item.type }} extra opts stripped first level'  # noqa name[template] extra information required for sane testing
+  when: item.opts
   ansible.builtin.assert:
     that: not _test_github_extra_opts.stat.exists
     success_msg: 'top level directory removed correctly.'
     fail_msg: 'top level directory "test_archive" should not exist.'
-  when: item.opts
 
 - name: 'Default | verify | {{ item.type }} extra opts kept first level'  # noqa name[template] extra information required for sane testing
+  when: not item.opts
   ansible.builtin.assert:
     that: _test_github_extra_opts.stat.exists
     success_msg: 'top level directory "test_archive" kept.'
     fail_msg: 'top level directory "test_archive" deleted. Should be kept.'
-  when: not item.opts
 
 - name: 'Default | verify | query {{ item.archive }}'
   ansible.builtin.stat:
@@ -63,13 +63,14 @@
   register: _test_github_symlink
 
 - name: 'Default | verify | symlink not created'
+  when: item.symlink | length == 0
   ansible.builtin.assert:
     that: not _test_github_symlink.stat.exists
     success_msg: 'symlink does not exist.'
     fail_msg: 'symlink exists. It should not exist.'
-  when: item.symlink | length == 0
 
 - name: 'Default | verify | symlink created'
+  when: item.symlink | length > 0
   ansible.builtin.assert:
     that:
       - _test_github_symlink.stat.exists
@@ -79,18 +80,17 @@
       - _test_github_symlink.stat.gr_name == 'root'
     success_msg: 'symlink created correctly.'
     fail_msg: 'symlink does not exist or is not setup correctly.'
-  when: item.symlink | length > 0
 
 - name: 'Default | verify | github_staging_clean'
+  when: item.clean
   ansible.builtin.assert:
     that: not _test_github_archive_deleted.stat.exists
     success_msg: '{{ item.archive }} removed correctly.'
     fail_msg: '{{ item.archive }} exists. It should have been deleted.'
-  when: item.clean
 
 - name: 'Default | verify | github_staging_clean'
+  when: not item.clean
   ansible.builtin.assert:
     that: _test_github_archive_deleted.stat.exists
     success_msg: '{{ item.archive }} exists.'
     fail_msg: '{{ item.archive }} missing. It should exist.'
-  when: not item.clean

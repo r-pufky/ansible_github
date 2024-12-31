@@ -5,13 +5,14 @@
 # testing these values.
 #
 # Idempotent testing disabled as specific commands will never be idempotent.
+# * Files created, extracted, created, deleted.
 #
 # Reference:
 # * https://github.com/ansible/molecule/issues/816
 
 - name: 'Extract delete | converge'
-  hosts: all
-  gather_facts: true
+  hosts: 'all'
+  gather_facts: false
   tags: 'molecule-idempotence-notest'
   tasks:
     - name: 'Extract delete | converge | extract v1.0.0 release'

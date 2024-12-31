@@ -11,15 +11,16 @@
 #   _github_extract_stat: stat - for existing extract location
 
 - name: 'Extract | create extract directory'
+  when: not _github_extract_stat.stat.exists
   ansible.builtin.file:
     path: '{{ _github_dir }}'
     owner: '{{ github_file_owner }}'
     group: '{{ github_file_group }}'
     mode: '{{ github_extract_mode }}'
     state: 'directory'
-  when: not _github_extract_stat.stat.exists
 
 - name: 'Extract | unpack archive'
+  when: not _github_extract_stat.stat.exists
   ansible.builtin.unarchive:
     src: '{{ _github_archive }}'
     remote_src: true
@@ -28,18 +29,18 @@
     group: '{{ github_file_group | default("root", true) }}'
     mode: '{{ github_extract_mode | default("0644", true) }}'
     extra_opts: '{{ github_extract_extra_opts | default(omit, true) }}'
-  when: not _github_extract_stat.stat.exists
 
 - name: 'Extract | cleanup non-required archive source files'
+  when: >
+    not _github_extract_stat.stat.exists and
+    github_extract_remove_files | length > 0
   ansible.builtin.file:
     path: '{{ _github_dir }}/{{ item }}'
     state: 'absent'
   loop: '{{ github_extract_remove_files }}'
-  when: >
-    not _github_extract_stat.stat.exists and
-    github_extract_remove_files | length > 0
 
 - name: 'Extract | symlink {{ _github_dir }} to {{ github_extract_symlink_target }}'  # noqa name[template] provide full symlink info
+  when: github_extract_symlink_target
   ansible.builtin.file:
     src: '{{ _github_dir }}'
     dest: '{{ github_extract_symlink_target }}'
@@ -47,7 +48,6 @@
     group: '{{ github_file_group }}'
     force: true
     state: 'link'
-  when: github_extract_symlink_target
 
 - name: 'Prep | remove old versions'
   when: github_extract_delete_old_versions
@@ -63,15 +63,15 @@
       register: _github_install_stat
 
     - name: 'Extract | delete old versions'
+      when: >
+        _github_target != item.path.split("-", 1)[-1]
       ansible.builtin.file:
         path: '{{ item.path }}'
         state: 'absent'
       loop: '{{ _github_install_stat.files }}'
-      when: >
-        _github_target != item.path.split("-", 1)[-1]
 
 - name: 'Extract | cleanup staging archive'
+  when: github_staging_clean
   ansible.builtin.file:
     path: '{{ _github_archive }}'
     state: 'absent'
-  when: github_staging_clean

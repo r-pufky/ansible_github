@@ -1,0 +1,24 @@
+---
+# yamllint disable rule:line-length
+###############################################################################
+# Unpack Github Archive
+###############################################################################
+# Migrate files and handle case of brand new installation. Ignore non-existing
+# source files, preserving ownership and file permissions.
+#
+# Args:
+#   item: str - remote file path to migrate
+#   _github_dir: str - local versioned extract location
+
+- name: 'Extract | migrate | check {{ item }}'
+  ansible.builtin.stat:
+    path: '{{ github_extract_symlink_target }}/{{ item }}'
+  register: _github_migrate_file
+
+- name: 'Extract | migrate | migrate {{ item }}'  # noqa risky-file-permissions keep original
+  when: _github_migrate_file.stat.exists
+  ansible.builtin.copy:
+    remote_src: true
+    src: '{{ github_extract_symlink_target }}/{{ item }}'
+    dest: '{{ _github_dir }}/{{ item }}'
+    force: true

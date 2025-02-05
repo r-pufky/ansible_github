@@ -1,0 +1,103 @@
+---
+# yamllint disable rule:line-length
+# Role variable returned variables are scoped to the current play only (e.g.
+# converge.yml) and must be tested between each application of the role. Test
+# these values while converging versus verify.yml (where scoping will prevent)
+# testing these values.
+#
+# Reference:
+# * https://github.com/ansible/molecule/issues/816
+
+- name: 'Extract delete migration | converge'
+  hosts: 'all'
+  gather_facts: false
+  tasks:
+    - name: 'Extract delete migration | converge | apply r_pufky.srv.github (v1.0.0)'
+      ansible.builtin.include_role:
+        name: 'r_pufky.srv.github'
+      vars:
+        github_testing_version: 'v1.0.0'
+        github_testing_archive: '{{ lookup("env", "MOLECULE_PROJECT_DIRECTORY") }}/molecule/files/test_archive_v1.0.0.tar.gz'
+        github_repo_archive_type: 'tar.gz'
+        github_repo_owner: 'leetreleaser'
+        github_repo_repo: 'test_repo'
+        github_repo_release: 'latest'
+        github_file_owner: 'root'
+        github_file_group: 'root'
+        github_extract_dest: '/opt/test_repo_gz'
+        github_extract_symlink_target: '/opt/test_repo_gz/test_repo'
+        github_extract_extra_opts: '--strip-components=1'
+        github_extract_mode: 'a-st,o-rwx'
+        github_extract_remove_files:
+          - 'README.md'
+          - '.hidden_file'
+        github_extract_migrate_files: ['config/db/db_skeleton_file.db']
+
+    - name: 'Extract delete migration | converge | add non-repo directory'
+      ansible.builtin.file:
+        path: '/opt/test_repo_gz/this_dir_should_not_be_removed'
+        owner: 'root'
+        group: 'root'
+        mode: '0755'
+        state: 'directory'
+
+    - name: 'Extract delete migration | converge | add non-repo directory'
+      ansible.builtin.file:
+        path: '/opt/test_repo_gz/this_file_should_not_be_removed'
+        owner: 'root'
+        group: 'root'
+        mode: '0755'
+        state: 'touch'
+
+- name: 'Extract delete migration | converge | migrate data'
+  hosts: 'github-debian-12-extract_delete_migration'
+  gather_facts: false
+  tasks:
+    - name: 'Extract delete migration | converge | apply r_pufky.srv.github (v1.0.1)'
+      ansible.builtin.include_role:
+        name: 'r_pufky.srv.github'
+      vars:
+        github_testing_version: 'v1.0.1'
+        github_testing_archive: '{{ lookup("env", "MOLECULE_PROJECT_DIRECTORY") }}/molecule/files/test_archive_v1.0.1.tar.gz'
+        github_repo_archive_type: 'tar.gz'
+        github_repo_owner: 'leetreleaser'
+        github_repo_repo: 'test_repo'
+        github_repo_release: 'latest'
+        github_file_owner: 'root'
+        github_file_group: 'root'
+        github_extract_dest: '/opt/test_repo_gz'
+        github_extract_symlink_target: '/opt/test_repo_gz/test_repo'
+        github_extract_extra_opts: '--strip-components=1'
+        github_extract_mode: 'a-st,o-rwx'
+        github_extract_remove_files:
+          - 'README.md'
+          - '.hidden_file'
+        github_extract_migrate_files:
+          - 'config/db/db_skeleton_file.db'
+          - 'non_existing_file_should_be_skipped_no_errors'
+        github_extract_delete_old_versions: true
+
+- name: 'Extract delete migration | converge | no migration'
+  hosts: 'github-debian-12-extract_delete_migration-no-keep'
+  gather_facts: false
+  tasks:
+    - name: 'Extract delete migration | converge | apply r_pufky.srv.github (v1.0.1)'
+      ansible.builtin.include_role:
+        name: 'r_pufky.srv.github'
+      vars:
+        github_testing_version: 'v1.0.1'
+        github_testing_archive: '{{ lookup("env", "MOLECULE_PROJECT_DIRECTORY") }}/molecule/files/test_archive_v1.0.1.tar.gz'
+        github_repo_archive_type: 'tar.gz'
+        github_repo_owner: 'leetreleaser'
+        github_repo_repo: 'test_repo'
+        github_repo_release: 'latest'
+        github_file_owner: 'root'
+        github_file_group: 'root'
+        github_extract_dest: '/opt/test_repo_gz'
+        github_extract_symlink_target: '/opt/test_repo_gz/test_repo'
+        github_extract_extra_opts: '--strip-components=1'
+        github_extract_mode: 'a-st,o-rwx'
+        github_extract_remove_files:
+          - 'README.md'
+          - '.hidden_file'
+        github_extract_delete_old_versions: true

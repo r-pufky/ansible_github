@@ -1,5 +1,7 @@
 ---
-# Verify files are extracted correctly.
+# Confirm:
+# * releases are installed and migrated to the new version
+# * migrated files are kept to v1.0.0
 dependency:
   name: 'galaxy'
 driver:
@@ -17,7 +19,14 @@ provisioner:
       all:
         github_testing_enable: true
 platforms:
-  - name: 'github-debian-12-extract_delete'
+  - name: 'github-debian-12-extract_delete_migration'
+    image: 'ghcr.io/hifis-net/debian-systemd:12'
+    systemd: 'always'
+    volumes:
+      - '/sys/fs/cgroup:/sys/fs/cgroup:ro'
+    command: '/lib/systemd/systemd'
+    pre_build_image: true
+  - name: 'github-debian-12-extract_delete_migration-no-keep'
     image: 'ghcr.io/hifis-net/debian-systemd:12'
     systemd: 'always'
     volumes:

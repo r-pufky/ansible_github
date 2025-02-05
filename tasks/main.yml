@@ -6,6 +6,7 @@
   vars:
     apt_packages:
       - '{{ github_role_packages }}'
+      - '{{ github_role_testing_packages if github_testing_enable else [] }}'
     apt_package_update_cache: true
 
 - name: 'Prep'

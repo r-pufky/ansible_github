@@ -28,7 +28,8 @@ collection.
 
 ## Example Playbook
 This role is intended to be called multiple times in other roles with most
-options being set per repository release being downloaded.
+options being set per repository release being downloaded. Files may optionally
+be migrated to new installations.
 
 group_vars/all/main.yml
 ``` yaml
@@ -51,6 +52,8 @@ roles/my_custom_role/tasks/task.yml
     github_extract_dest: '/opt/overseerr'
     github_extract_mode: 'a-st,o-rwx'
     github_extract_extra_opts: '--strip-components=1'
+    github_extract_symlink_target: 'opt/overserr/latest'
+    github_extract_migrate_files: ['config.db']
     github_extract_remove_files:
       - 'README.md'
       - 'config/.keep'

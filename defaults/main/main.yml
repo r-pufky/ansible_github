@@ -25,13 +25,13 @@
 # fine-grained tokens may be used.
 #
 # Classic Tokens:
-# * settings ➤ developer settings ➤ personal access tokens (classic)
+# * settings > developer settings > personal access tokens (classic)
 #   * notes: {LABEL APPROPRIATELY}
 #   * expiration: {CUSTOM}
 #   * scopes: NONE
 #
 # Fine-grained Tokens:
-# * settings ➤ developer settings ➤ personal access tokens (fine-grained)
+# * settings > developer settings > personal access tokens (fine-grained)
 #   * token name: {LABEL APPROPRIATELY}
 #   * expiration: {CUSTOM}
 #   * description: {DESCRIPTIVE TEXT}
@@ -131,7 +131,7 @@ github_extract_dest: '/tmp'
 # Create a symlink to the versioned extracted archive?
 #
 # Symlink will be FORCE created, linking the extracted versioned archive to the
-# specified location.
+# specified location. The target root directory must exist.
 #
 # github_repo_repo: 'myrepo'
 # github_repo_release: 'latest'
@@ -149,6 +149,24 @@ github_extract_dest: '/tmp'
 #
 # Default: '' (disabled).
 github_extract_symlink_target: ''
+
+# Migrate listed files to newly installed release.
+#
+# After extraction and github_extract_remove_files are removed, migrate files
+# from old version to the new version; preserving ownership and permissions.
+#
+# Special Case:
+#   * explicitly list files from the release root, no globbing.
+#   * requires github_extract_symlink_target to be set.
+#   * files are not migrated if it is a brand new installation.
+#   * files that do not exist will not cause errors.
+#
+# github_migrate_files:
+#   - 'config.db'  # v1.2/config.db -> v1.3/config.db
+#   - 'settings/alt/config.yaml'  # v1.2/settings/alt/config.yaml -> v1.3/settings/alt/config.yaml
+#
+# Default: [] (no migration).
+github_extract_migrate_files: []
 
 # Apply permissions to extracted files.
 #

@@ -39,6 +39,20 @@
     state: 'absent'
   loop: '{{ github_extract_remove_files }}'
 
+- name: 'Extract | check for existing symlink'
+  ansible.builtin.stat:
+    path: '{{ github_extract_symlink_target }}'
+  check_mode: true
+  register: _github_symlink_stat
+
+# Migrate files before removing symlink to old version.
+- name: 'Extract | migrate'
+  when: >
+    _github_symlink_stat.stat.exists and
+    github_extract_migrate_files | length > 0
+  ansible.builtin.include_tasks: 'migrate.yml'
+  loop: '{{ github_extract_migrate_files }}'
+
 - name: 'Extract | symlink {{ _github_dir }} to {{ github_extract_symlink_target }}'  # noqa name[template] provide full symlink info
   when: github_extract_symlink_target
   ansible.builtin.file:

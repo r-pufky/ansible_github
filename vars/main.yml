@@ -14,10 +14,16 @@ github_role_validate_release: 'bookworm'
 # Role checked against this version of the API.
 github_role_api_version: '2022-11-28'
 
-# Default packages for github.
-github_role_packages:
-  - 'unzip'  # zip
-  - 'xz-utils'  # xz
-
 # Github API base URL.
 github_role_release_url_base: 'https://api.github.com/repos'
+
+###############################################################################
+# APT Packages
+###############################################################################
+
+github_role_packages:
+  - 'unzip'  # zip archives.
+  - 'xz-utils'  # xz archives.
+
+github_role_testing_packages:
+  - 'rsync'  # ansible.posix.synchronize (testing local archive copy).

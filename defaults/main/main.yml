@@ -70,7 +70,7 @@ github_staging_clean: true
 github_download_retries: 5
 
 ###############################################################################
-# Github local file permissions
+# Github Local File Permissions
 ###############################################################################
 # Downloaded and extracted file user permissions. User must be managed
 # externally.
@@ -82,7 +82,7 @@ github_file_owner: 'root'
 github_file_group: 'root'
 
 ###############################################################################
-# Github repository
+# Github Repository
 ###############################################################################
 
 # Github repository owner. Default: ''.
@@ -104,7 +104,57 @@ github_repo_release: 'latest'
 github_repo_archive_type: 'tar.gz'
 
 ###############################################################################
-# Github local file permissions
+# Github Binary Archive
+###############################################################################
+# Role will download repositories primary archive by default. For most releases
+# this will be either source or a binary release. Certain repositories contain
+# both a source and a Binary release, or platform specific releases. Enabling
+# binary downloads allows selecting one of these releases to download instead.
+#
+# An example of this is Radarr, which the primary release archive is source,
+# with specific built binary releases based on platform. For this repository
+# you would enable binary archives to download the correct version.
+#
+# Reference:
+# * https://github.com/Radarr/Radarr/releases/latest
+
+# Enable binary download instead of source release? Default: False.
+github_binary_enable: false
+
+# Version specifier.
+#
+# Prepended text to a tag name delineating version:
+# * tag: v1.2.3
+# * specifier: v
+# * version: 1.2.3
+#
+# Default: '' (no specifier).
+github_binary_specifier: ''
+
+# Binary release URL template.
+#
+# Use URL path after repository download URI. Must be specified if
+# github_binary_enable=true.
+#
+# Special Case:
+#        {VERSION}: version detected or set (e.g. v1.2.3).
+#   {BARE_VERSION}: version detected or set with github_repo_version_specifier
+#                   removed. If specifier is not found, {VERSION} is used.
+#                   (e.g. 1.2.3).
+#
+# github_repo_owner: 'myuser'
+# github_repo_repo: 'myrepo'
+# github_repo_release: 'latest'  # (v5.18.4.9674)
+# github_binary_url: '{VERSION}/Binary.{BARE_VERSION}.x86-64.tar.gz'
+#
+# Results in the following URL:
+# https://github.com/myuser/myrepo/releases/download/v5.18.4.9674/Binary.5.18.4.9674.x86-64.tar.gz'
+#
+# Default: ''.
+github_binary_url: ''
+
+###############################################################################
+# Github Archive Extraction Options
 ###############################################################################
 # Options per ansible.builtin.unarchive.
 #

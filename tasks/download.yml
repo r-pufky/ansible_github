@@ -41,7 +41,7 @@
 - name: 'Testing | download'
   when: (github_testing_enable | default(false))
   block:
-    - name: 'Testing | download | inject dowloaded archive'
+    - name: 'Testing | download | inject downloaded archive'
       ansible.posix.synchronize:
         src: '{{ github_testing_archive }}'
         dest: '{{ _github_archive }}'

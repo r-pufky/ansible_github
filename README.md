@@ -59,6 +59,34 @@ roles/my_custom_role/tasks/task.yml
       - 'config/.keep'
 ```
 
+Binary releases may be explicitly specified for repositories which release
+source and binaries:
+
+roles/my_custom_role/tasks/task.yml
+``` yaml
+- name: 'download and extract latest BINARY release'
+  ansible.builtin.include_role:
+    name: 'r_pufky.srv.github'
+  vars:
+    github_binary_enable: true
+    github_binary_specifier: 'v'
+    github_binary_url: '{VERSION}/Binary.{BARE_VERSION}.x86-64.tar.gz'
+    github_repo_owner: 'sct'
+    github_repo_repo: 'overseerr'
+    github_repo_release: 'latest'
+    github_repo_archive_type: 'tar.gz'
+    github_file_owner: 'overseerr'
+    github_file_group: 'overseerr'
+    github_extract_dest: '/opt/overseerr'
+    github_extract_mode: 'a-st,o-rwx'
+    github_extract_extra_opts: '--strip-components=1'
+    github_extract_symlink_target: 'opt/overserr/latest'
+    github_extract_migrate_files: ['config.db']
+    github_extract_remove_files:
+      - 'README.md'
+      - 'config/.keep'
+```
+
 ## Development
 Configure [environment](https://github.com/r-pufky/ansible_collection_srv/blob/main/docs/dev/environment/README.md)
 

@@ -22,6 +22,7 @@ github_role_release_url_base: 'https://api.github.com/repos'
 ###############################################################################
 
 github_role_packages:
+  - 'ca-certificates'  # SSL support for ansible.builtin.get_url.
   - 'unzip'  # zip archives.
   - 'xz-utils'  # xz archives.
 

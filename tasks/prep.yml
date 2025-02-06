@@ -34,6 +34,13 @@
 # Reference:
 # * https://docs.github.com/en/rest/releases
 
+- name: 'Prep | assert binary URL'
+  when: github_binary_enable
+  ansible.builtin.assert:
+    that:
+      - github_binary_url | length > 0
+    fail_msg: 'github_binary_url must be set if github_binary_enable=true'
+
 - name: 'Prep | get release metadata'
   when: not (github_testing_enable | default(false))
   ansible.builtin.uri:
@@ -52,6 +59,21 @@
   ansible.builtin.set_fact:
     _github_target: '{{ _github_remote_metadata.json.tag_name }}'
     _github_target_url: '{{ _github_remote_metadata.json.tarball_url if github_repo_archive_type.startswith("tar") else _github_remote_metadata.json.zipball_url }}'
+
+- name: 'Prep | binary download'
+  when: github_binary_enable
+  block:
+    - name: 'Prep | binary download | split version on specifier'
+      ansible.builtin.set_fact:
+        _github_target_bare: '{{ _github_target if github_binary_specifier == "" else _github_target.split(github_binary_specifier)[1:] | join(github_binary_specifier) }}'
+
+    - name: 'Prep | binary download | parse binary path'
+      ansible.builtin.set_fact:
+        _github_binary_path: '{{ github_binary_url | regex_replace("{VERSION}", _github_target) | regex_replace("{BARE_VERSION}", _github_target_bare) }}'
+
+    - name: 'Prep | binary download | set target URL'
+      ansible.builtin.set_fact:
+        _github_target_url: 'https://github.com/{{ github_repo_owner }}/{{ github_repo_repo }}/releases/download/{{ _github_binary_path | default(_github_target_url) }}'
 
 - name: 'Prep | generate locations'
   ansible.builtin.set_fact:

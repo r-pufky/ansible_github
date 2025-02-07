@@ -42,6 +42,7 @@
   when: (github_testing_enable | default(false))
   block:
     - name: 'TESTING | download | inject downloaded archive'
+      when: github_testing_archive | length > 0
       ansible.posix.synchronize:
         src: '{{ github_testing_archive }}'
         dest: '{{ _github_archive }}'

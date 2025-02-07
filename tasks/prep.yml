@@ -41,24 +41,37 @@
       - github_binary_url | length > 0
     fail_msg: 'github_binary_url must be set if github_binary_enable=true'
 
+- name: 'Prep | build release queries'
+  ansible.builtin.set_fact:
+    _github_base_url: '{{ github_role_release_url_base }}/{{ github_repo_owner }}/{{ github_repo_repo }}/releases'
+    _github_release_path: '/{{ "tags/" if github_repo_release != "latest" }}{{ github_repo_release }}'
+
 - name: 'Prep | get release metadata'
   when: not (github_testing_enable | default(false))
   ansible.builtin.uri:
-    url: '{{ github_role_release_url_base }}/{{ github_repo_owner }}/{{ github_repo_repo }}/releases/{{ "tags/" if github_repo_release != "latest" }}{{ github_repo_release }}'
+    url: '{{ _github_base_url }}{{ "" if github_repo_pre_release_enable else _github_release_path }}'
     return_content: true
     headers:
       Authorization: '{{ github_personal_access_token | default(omit) }}'
   register: _github_remote_metadata
 
-- name: 'Testing | inject get release metadata'
+- name: 'TESTING | inject get release metadata'
   when: (github_testing_enable | default(false))
   ansible.builtin.set_fact:
-    _github_remote_metadata: '{{ {"json": {"tag_name": "{{ github_testing_version }}", "tarball_url": "http://example.com/tar", "zipball_url": "http://example.com/zip"}} }}'
+    _github_remote_metadata: '{{
+      {"json": {"tag_name": "{{ github_testing_version }}", "tarball_url": "http://example.com/tar", "zipball_url": "http://example.com/zip"}}
+      if not github_repo_pre_release_enable else
+      {"json": [{"tag_name": "{{ github_testing_version }}", "tarball_url": "http://example.com/pre_tar", "zipball_url": "http://example.com/pre_zip"}]}
+      }}'
+
+- name: 'Prep | sanitize release metadata'
+  ansible.builtin.set_fact:
+    _github_json: '{{ _github_remote_metadata.json[0] if github_repo_pre_release_enable else _github_remote_metadata.json }}'
 
 - name: 'Prep | parse release metadata'
   ansible.builtin.set_fact:
-    _github_target: '{{ _github_remote_metadata.json.tag_name }}'
-    _github_target_url: '{{ _github_remote_metadata.json.tarball_url if github_repo_archive_type.startswith("tar") else _github_remote_metadata.json.zipball_url }}'
+    _github_target: '{{ _github_json.tag_name }}'
+    _github_target_url: '{{ _github_json.tarball_url if github_repo_archive_type.startswith("tar") else _github_json.zipball_url }}'
 
 - name: 'Prep | binary download'
   when: github_binary_enable

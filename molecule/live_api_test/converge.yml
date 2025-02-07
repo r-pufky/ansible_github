@@ -1,12 +1,10 @@
 ---
-# yamllint disable rule:line-length
-
 - name: 'Live API test | converge'
   hosts: 'all'
   gather_facts: false
   tasks:
     - name: 'Live API test | converge | apply r_pufky.srv.github'
-      when: github_testing_enable
+      when: github_live_api_enable
       ansible.builtin.include_role:
         name: 'r_pufky.srv.github'
       vars:

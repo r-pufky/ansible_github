@@ -38,17 +38,17 @@
   retries: '{{ github_download_retries }}'
   delay: 2
 
-- name: 'Testing | download'
+- name: 'TESTING | download'
   when: (github_testing_enable | default(false))
   block:
-    - name: 'Testing | download | inject downloaded archive'
+    - name: 'TESTING | download | inject downloaded archive'
       ansible.posix.synchronize:
         src: '{{ github_testing_archive }}'
         dest: '{{ _github_archive }}'
         archive: false
         checksum: true
 
-    - name: 'Testing | inject archive permissions'
+    - name: 'TESTING | inject archive permissions'
       ansible.builtin.file:
         path: '{{ _github_archive }}'
         owner: '{{ github_file_owner }}'

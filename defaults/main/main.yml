@@ -94,6 +94,13 @@ github_repo_repo: ''
 # Github repository release. Default: 'latest'.
 github_repo_release: 'latest'
 
+# Github repository pre-releases.
+#
+# Include all releases when searching for latest, not just tagged releases.
+#
+# Default: False.
+github_repo_pre_release_enable: false
+
 # Github repository archive type.
 #
 # Values:

@@ -63,10 +63,10 @@
     force: true
     state: 'link'
 
-- name: 'Prep | remove old versions'
+- name: 'Extract | remove old versions'
   when: github_extract_delete_old_versions
   block:
-    - name: 'Prep | find existing extracted archives'
+    - name: 'Extract | find existing extracted archives'
       ansible.builtin.find:
         paths: '{{ github_extract_dest }}'
         file_type: 'directory'

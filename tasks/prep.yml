@@ -55,7 +55,7 @@
       Authorization: '{{ github_personal_access_token | default(omit) }}'
   register: _github_remote_metadata
 
-- name: 'TESTING | inject get release metadata'
+- name: 'Prep | inject get release metadata'
   when: (github_testing_enable | default(false))
   ansible.builtin.set_fact:
     _github_remote_metadata: '{{

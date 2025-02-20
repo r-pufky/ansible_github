@@ -213,14 +213,16 @@ github_extract_symlink_target: ''
 # from old version to the new version; preserving ownership and permissions.
 #
 # Special Case:
-#   * explicitly list files from the release root, no globbing.
-#   * requires github_extract_symlink_target to be set.
-#   * files are not migrated if it is a brand new installation.
-#   * files that do not exist will not cause errors.
+#   * Explicitly list files from the release root, no globbing.
+#   * Requires github_extract_symlink_target to be set.
+#   * Files are not migrated if it is a brand new installation.
+#   * Files that do not exist will not cause errors.
+#   * Directories are migrated recursively.
 #
 # github_migrate_files:
 #   - 'config.db'  # v1.2/config.db -> v1.3/config.db
 #   - 'settings/alt/config.yaml'  # v1.2/settings/alt/config.yaml -> v1.3/settings/alt/config.yaml
+#   - 'data_directory'  # v1.2/data_directory/ -> v1.3/data_directory/
 #
 # Default: [] (no migration).
 github_extract_migrate_files: []

@@ -54,9 +54,9 @@
           - _github_dir == '/opt/test_repo_gz_partial/test_repo-v1.0.0'
           - _github_remote_metadata is mapping
 
-    - name: 'Binary download | converge | binary, specifier | no URL | expected failure'
+    - name: 'Binary download | converge | binary, specifier | no URL | EXPECTED FAILURE'
       block:
-        - name: 'Binary download | converge | binary, specifier | no URL | expected failure | apply r_pufky.srv.github'
+        - name: 'Binary download | converge | binary, specifier | no URL | EXPECTED FAILURE | apply r_pufky.srv.github'
           ansible.builtin.include_role:
             name: 'r_pufky.srv.github'
           vars:
@@ -70,7 +70,7 @@
             github_extract_dest: '/opt/test_repo_gz_fail'
           register: _test_failure
       rescue:
-        - name: 'Binary download | converge | binary, specifier | no URL | expected failure | assert failure'
+        - name: 'Binary download | converge | binary, specifier | no URL | EXPECTED FAILURE | assert failure'
           ansible.builtin.assert:
             that:
               - not _test_failure.changed

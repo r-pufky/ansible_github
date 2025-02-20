@@ -71,6 +71,7 @@
         github_extract_migrate_files:
           - 'config/db/db_skeleton_file.db'
           - 'non_existing_file_should_be_skipped_no_errors'
+          - 'nested_migration'
         github_extract_delete_old_versions: true
 
 - name: 'Extract delete migration | converge | no migration'

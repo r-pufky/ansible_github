@@ -81,7 +81,9 @@ roles/my_custom_role/tasks/task.yml
     github_extract_mode: 'a-st,o-rwx'
     github_extract_extra_opts: '--strip-components=1'
     github_extract_symlink_target: 'opt/overserr/latest'
-    github_extract_migrate_files: ['config.db']
+    github_extract_migrate_files:
+      - 'config.db'
+      - 'data_directory'
     github_extract_remove_files:
       - 'README.md'
       - 'config/.keep'

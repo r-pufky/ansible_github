@@ -20,16 +20,17 @@
 # * Cleanup staged file if enabled.
 #
 # Generates:
-#   _github_staging_stat: stat - for existing staging location
-#   _github_extract_stat: stat - for existing extract location
-#   _github_archive_stat: stat - for existing archive location
+#   _github_staging_stat: stat - for existing staging location.
+#   _github_extract_stat: stat - for existing extract location.
+#   _github_archive_stat: stat - for existing archive location.
 #
 # Exports:
-#   _github_target: str - full version (vx.x.x) to install
-#   _github_target_url: str - download url for target release
-#   _github_archive: str - local versioned archive location
-#   _github_dir: str - local versioned target location
-#   _github_remote_metadata: dict - release metadata for requested version
+#   _github_target: str - full version (vx.x.x) to install.
+#   _github_target_url: str - download url for target release.
+#   _github_archive: str - local versioned archive location.
+#   _github_dir: str - local versioned target location.
+#   _github_remote_metadata: dict - release metadata for requested version.
+#   _github_extract: bool - true if new archive extracted/installed.
 #
 # Reference:
 # * https://docs.github.com/en/rest/releases
@@ -120,3 +121,7 @@
   ansible.builtin.stat:
     path: '{{ _github_dir }}'
   register: _github_extract_stat
+
+- name: 'Prep | set change state'
+  ansible.builtin.set_fact:
+    _github_changed: '{{ not _github_extract_stat.stat.exists }}'

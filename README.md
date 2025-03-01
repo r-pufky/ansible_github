@@ -21,6 +21,7 @@ scope):
  _github_archive         | str  | Local versioned archive location.
  _github_dir             | str  | Local versioned extract location.
  _github_remote_metadata | dict | Release metadata for requested version.
+ _github_changed         | bool | True if new archive extracted/installed.
 
 ## Dependencies
 Part of the [r_pufky.srv](https://github.com/r-pufky/ansible_collection_srv)

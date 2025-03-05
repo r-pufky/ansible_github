@@ -38,6 +38,7 @@
 - name: 'Prep | assert binary URL'
   when: github_binary_enable
   ansible.builtin.assert:
+    quiet: true
     that:
       - github_binary_url | length > 0
     fail_msg: 'github_binary_url must be set if github_binary_enable=true'

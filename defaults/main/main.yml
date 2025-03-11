@@ -104,8 +104,8 @@ github_repo_pre_release_enable: false
 # Github repository archive type.
 #
 # Values:
-#   'tar.*': Download tarball release.
-#     'zip': Download zipball release.
+#   tar.*: Download tarball release.
+#     zip: Download zipball release.
 #
 # Default: 'tar.gz'.
 github_repo_archive_type: 'tar.gz'

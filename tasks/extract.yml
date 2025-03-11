@@ -83,6 +83,8 @@
         path: '{{ item.path }}'
         state: 'absent'
       loop: '{{ _github_install_stat.files }}'
+      loop_control:
+        label: '{{ item.path }}'
 
 - name: 'Extract | cleanup staging archive'
   when: github_staging_clean

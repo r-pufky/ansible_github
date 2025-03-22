@@ -76,9 +76,9 @@
         recurse: false
       register: _github_install_stat
 
+    # Reverse index '-' as some repositories use - in names (paperless-ngx).
     - name: 'Extract | delete old versions'
-      when: >
-        _github_target != item.path.split("-", 1)[-1]
+      when: _github_target != item.path.split("-", -1)[-1]
       ansible.builtin.file:
         path: '{{ item.path }}'
         state: 'absent'

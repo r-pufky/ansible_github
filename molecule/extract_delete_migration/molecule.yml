@@ -1,4 +1,5 @@
 ---
+# yamllint disable rule:line-length
 # Confirm:
 # * releases are installed and migrated to the new version
 # * migrated files are kept to v1.0.0
@@ -18,6 +19,14 @@ provisioner:
     group_vars:
       all:
         github_testing_enable: true
+        github_testing_versions:
+          - 'v1.0.0'
+          - 'v1.0.1'
+          - 'v1.0.1'
+        github_testing_archives:
+          - '{{ lookup("env", "MOLECULE_PROJECT_DIRECTORY") }}/molecule/files/test_archive_v1.0.0.tar.gz'
+          - '{{ lookup("env", "MOLECULE_PROJECT_DIRECTORY") }}/molecule/files/test_archive_v1.0.1.tar.gz'
+          - '{{ lookup("env", "MOLECULE_PROJECT_DIRECTORY") }}/molecule/files/test_archive_v1.0.1.tar.gz'
 platforms:
   - name: 'github-debian-12-extract_delete_migration'
     image: 'ghcr.io/hifis-net/debian-systemd:12'

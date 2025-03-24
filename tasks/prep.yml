@@ -20,17 +20,19 @@
 # * Cleanup staged file if enabled.
 #
 # Generates:
-#   _github_staging_stat: stat - for existing staging location.
-#   _github_extract_stat: stat - for existing extract location.
-#   _github_archive_stat: stat - for existing archive location.
+#   _github_staging_stat: stat - For existing staging location.
+#   _github_extract_stat: stat - For existing extract location.
+#   _github_archive_stat: stat - For existing archive location.
+#   _github_cache_test_index: int - Current injected test archive item.
 #
 # Exports:
-#   _github_target: str - full version (vx.x.x) to install.
-#   _github_target_url: str - download url for target release.
-#   _github_archive: str - local versioned archive location.
-#   _github_dir: str - local versioned target location.
-#   _github_remote_metadata: dict - release metadata for requested version.
-#   _github_extract: bool - true if new archive extracted/installed.
+#   _github_target: str - Full version (vx.x.x) to install.
+#   _github_target_url: str - Download url for target release.
+#   _github_archive: str - Local versioned archive location.
+#   _github_dir: str - Local versioned target location.
+#   _github_remote_metadata: dict - Release metadata for requested version.
+#   _github_extract: bool - True if new archive extracted/installed.
+
 #
 # Reference:
 # * https://docs.github.com/en/rest/releases
@@ -57,14 +59,20 @@
       Authorization: '{{ github_personal_access_token | default(omit) }}'
   register: _github_remote_metadata
 
-- name: 'Prep | inject get release metadata'
+- name: 'Prep | testing'
   when: (github_testing_enable | default(false))
-  ansible.builtin.set_fact:
-    _github_remote_metadata: '{{
-      {"json": {"tag_name": "{{ github_testing_version }}", "tarball_url": "http://example.com/tar", "zipball_url": "http://example.com/zip"}}
-      if not github_repo_pre_release_enable else
-      {"json": [{"tag_name": "{{ github_testing_version }}", "tarball_url": "http://example.com/pre_tar", "zipball_url": "http://example.com/pre_zip"}]}
-      }}'
+  block:
+    - name: 'Prep | testing | cache data'
+      ansible.builtin.set_fact:
+        _github_cache_test_index: '{{ 0 if not _github_cache_test_index is defined else _github_cache_test_index | int + 1 }}'
+
+    - name: 'Prep | testing | inject get release metadata'
+      ansible.builtin.set_fact:
+        _github_remote_metadata: '{{
+          {"json": {"tag_name": "{{ github_testing_versions[_github_cache_test_index | int ] }}", "tarball_url": "http://example.com/tar", "zipball_url": "http://example.com/zip"}}
+          if not github_repo_pre_release_enable else
+          {"json": [{"tag_name": "{{ github_testing_versions[_github_cache_test_index | int ] }}", "tarball_url": "http://example.com/pre_tar", "zipball_url": "http://example.com/pre_zip"}]}
+          }}'
 
 - name: 'Prep | sanitize release metadata'
   ansible.builtin.set_fact:

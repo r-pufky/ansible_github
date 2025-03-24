@@ -17,12 +17,18 @@
 # Default: False.
 github_testing_enable: false
 
-# Release version simulated to return. Default: ''.
-github_testing_version: ''
+# Release versions simulated to return.
+#
+# A list of versions may be used to simulate multiple github calls in a play.
+# Ordered with github_testing_archives.
+#
+# Default: [].
+github_testing_versions: []
 
-# Source location of archive on ansible host to simulate downloading.
+# Source locations of archive on ansible host to simulate downloading.
 #
-# File will be synchronize'd to the remote system.
+# File will be synchronize'd to the remote system. Ordered with
+# github_testing_versions.
 #
-# Default: '' (disabled).
-github_testing_archive: ''
+# Default: p[] (disabled).
+github_testing_archives: []

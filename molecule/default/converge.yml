@@ -12,7 +12,6 @@
       ansible.builtin.include_role:
         name: 'r_pufky.srv.github'
       vars:
-        github_testing_archive: '{{ lookup("env", "MOLECULE_PROJECT_DIRECTORY") }}/molecule/files/test_archive_v1.0.0.tar.gz'
         github_repo_archive_type: 'tar.gz'
         github_repo_owner: 'leetreleaser'
         github_repo_repo: 'test_repo'
@@ -39,7 +38,6 @@
       ansible.builtin.include_role:
         name: 'r_pufky.srv.github'
       vars:
-        github_testing_archive: '{{ lookup("env", "MOLECULE_PROJECT_DIRECTORY") }}/molecule/files/test_archive_v1.0.0.tar.xz'
         github_repo_archive_type: 'tar.xz'
         github_repo_owner: 'leetreleaser'
         github_repo_repo: 'test_repo'
@@ -66,7 +64,6 @@
       ansible.builtin.include_role:
         name: 'r_pufky.srv.github'
       vars:
-        github_testing_archive: '{{ lookup("env", "MOLECULE_PROJECT_DIRECTORY") }}/molecule/files/test_archive_v1.0.0.zip'
         github_staging_clean: false
         github_repo_archive_type: 'zip'
         github_repo_owner: 'leetreleaser'

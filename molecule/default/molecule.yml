@@ -1,4 +1,5 @@
 ---
+# yamllint disable rule:line-length
 # Confirm:
 # * all three archive types are extracted correctly.
 # * migrated files are not migrated due to brand new installation.
@@ -18,8 +19,15 @@ provisioner:
     group_vars:
       all:
         github_testing_enable: true
-        github_testing_version: 'v1.0.0'
         github_extract_migrate_files: ['config/db/db_skeleton_file.db']
+        github_testing_versions:
+          - 'v1.0.0'
+          - 'v1.0.0'
+          - 'v1.0.0'
+        github_testing_archives:
+          - '{{ lookup("env", "MOLECULE_PROJECT_DIRECTORY") }}/molecule/files/test_archive_v1.0.0.tar.gz'
+          - '{{ lookup("env", "MOLECULE_PROJECT_DIRECTORY") }}/molecule/files/test_archive_v1.0.0.tar.xz'
+          - '{{ lookup("env", "MOLECULE_PROJECT_DIRECTORY") }}/molecule/files/test_archive_v1.0.0.zip'
 platforms:
   - name: 'github-debian-12-default'
     image: 'ghcr.io/hifis-net/debian-systemd:12'

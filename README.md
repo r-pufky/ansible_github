@@ -106,7 +106,7 @@ molecule test -s live_api_test -- -v -e 'github_testing_enable=true,github_perso
 ### Testing in other Roles
 Testing may be toggled on the role to facilitate testing other roles which
 consume this role, removing the need to hammer the github REST API or download
-archive files.
+archive files. Effectively this is a replay mock.
 
 group_vars/archives:
 ```
@@ -121,12 +121,20 @@ provisioner:
     group_vars:
       all:
         github_testing_enable: true
-        github_testing_version: 'v1.0.0'
-        github_testing_archive: 'group_vars/archives/project_v1.0.0.tar.gz'
+        github_testing_versions:
+          - 'v1.0.0'
+          - 'v1.0.1'
+        github_testing_archives:
+          - 'group_vars/archives/project_v1.0.0.tar.gz'
+          - 'group_vars/archives/project_v1.0.1.tar.gz'
 ```
-When the role is called during testing, version queries will always return
-`v1.0.0` and the github download will be simulated by synchronizing the
+When the role is called during testing, the first execution of the role will
+return `v1.0.0` and the github download will be simulated by synchronizing the
 specified archive from the ansible controller to the testing node.
+
+The Second execution of the role will return `v1.0.1` and the github download
+will be simulated by synchronizing the specified archive from the ansible
+controller to the testing node.
 
 ### Issues
 Create a bug and provide as much information as possible.

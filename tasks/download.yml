@@ -7,10 +7,11 @@
 # version.
 #
 # Args:
-#   _github_target: str - full version (vx.x.x) to install
-#   _github_target_url: str - download url for target release
-#   _github_archive: str - local versioned archive location
-#   _github_staging_stat: stat - for existing staging location
+#   _github_target: str - Full version (vx.x.x) to install.
+#   _github_target_url: str - Download url for target release.
+#   _github_archive: str - Local versioned archive location.
+#   _github_staging_stat: stat - For existing staging location.
+#   _github_cache_test_index: int - Current injected test archive item.
 
 - name: 'Download | create staging directory'
   when: not _github_staging_stat.stat.exists
@@ -42,9 +43,9 @@
   when: (github_testing_enable | default(false))
   block:
     - name: 'Download | inject downloaded archive'
-      when: github_testing_archive | length > 0
+      when: github_testing_archives | length > 0
       ansible.posix.synchronize:
-        src: '{{ github_testing_archive }}'
+        src: '{{ github_testing_archives[_github_cache_test_index | int] }}'
         dest: '{{ _github_archive }}'
         archive: false
         checksum: true

@@ -160,6 +160,28 @@ github_binary_specifier: ''
 # Default: ''.
 github_binary_url: ''
 
+# Binary release static URL.
+#
+# WARNING HERE BE DRAGONS.
+# > If you are using this, the repo owner is NOT using source control
+# > correctly. Strongly consider why you need to specify a URL outside of
+# > public github repositories to download a release (e.g. malicious code
+# > injection, etc).
+#
+# Complete URL to an archive resource. For repositories that only release
+# source code, but have an alternative URL for pre-build binaries which are not
+# hosted on github. All other processing applies as normal.
+#
+# Special Case:
+#   *: ALWAYS generates warning messages as this can be extremely dangerous.
+#   *: Only use if there are no other options.
+#   *: Overrides github_binary_url if both are set. Version (tag) will always
+#      be set to the date that URL is accessed (Y-m-d). Potentially this means
+#      installing a new version every day the role is run.
+#
+# Default: ''.
+github_binary_static_url: ''
+
 ###############################################################################
 # Github Archive Extraction Options
 ###############################################################################

@@ -42,8 +42,22 @@
   ansible.builtin.assert:
     quiet: true
     that:
-      - github_binary_url | length > 0
-    fail_msg: 'github_binary_url must be set if github_binary_enable=true'
+      - github_binary_url | length > 0 or github_binary_static_url | length > 0
+    fail_msg: >
+      github_binary_url or github_binary_static_url must be set if
+      github_binary_enable=true.
+
+- name: 'Prep | WARNING'
+  when: github_binary_static_url | length > 0
+  ansible.builtin.debug:
+    msg: |
+      WARNING: DOWNLOAD CANNOT BE VERIFIED.
+
+      Static URLs should ONLY be used for repositories without versioning which
+      release compiled binaries from a separate URL. These downloads can
+      contain malicious code and should be UNTRUSTED by default.
+
+      {{ github_binary_static_url }}
 
 - name: 'Prep | build release queries'
   ansible.builtin.set_fact:
@@ -51,13 +65,21 @@
     _github_release_path: '/{{ "tags/" if github_repo_release != "latest" }}{{ github_repo_release }}'
 
 - name: 'Prep | get release metadata'
-  when: not (github_testing_enable | default(false))
+  when: >
+    not (github_testing_enable | default(false)) and
+    github_binary_static_url | length == 0
   ansible.builtin.uri:
     url: '{{ _github_base_url }}{{ "" if github_repo_pre_release_enable else _github_release_path }}'
     return_content: true
     headers:
       Authorization: '{{ github_personal_access_token | default(omit) }}'
   register: _github_remote_metadata
+
+# Set before testing for injection. Normal binary URL generate own metadata.
+- name: 'Prep | static URL download'
+  when: github_binary_static_url | length > 0
+  ansible.builtin.set_fact:
+    _github_remote_metadata: {"json": {"tag_name": "{{ now(utc=true, fmt='%Y-%m-%d') }}", "tarball_url": "{{ github_binary_static_url }}", "zipball_url": "{{ github_binary_static_url }}"}}
 
 - name: 'Prep | testing'
   when: (github_testing_enable | default(false))
@@ -84,7 +106,7 @@
     _github_target_url: '{{ _github_json.tarball_url if github_repo_archive_type.startswith("tar") else _github_json.zipball_url }}'
 
 - name: 'Prep | binary download'
-  when: github_binary_enable
+  when: github_binary_enable and github_binary_static_url | length == 0
   block:
     - name: 'Prep | binary download | split version on specifier'
       ansible.builtin.set_fact:

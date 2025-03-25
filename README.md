@@ -106,7 +106,7 @@ molecule test -s live_api_test -- -v -e 'github_testing_enable=true,github_perso
 ### Testing in other Roles
 Testing may be toggled on the role to facilitate testing other roles which
 consume this role, removing the need to hammer the github REST API or download
-archive files. Effectively this is a replay mock.
+archive files. Never rely on this for live code. Effectively this is a mock.
 
 group_vars/archives:
 ```

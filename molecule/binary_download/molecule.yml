@@ -1,10 +1,11 @@
 ---
 # yamllint disable rule:line-length
 # Confirm:
-# * binary downloads enabled with specifier and URL
-# * binary downloads enabled without specifier
-# * binary downloads enabled with partial URL replacements
-# * binary downloaded enable with no URL fail
+# * Binary downloads enabled with specifier and URL.
+# * Binary downloads enabled without specifier.
+# * Binary downloads enabled with partial URL replacements.
+# * Binary downloaded enable with no URL fail.
+# * Static binary URL overrides binary URL settings.
 dependency:
   name: 'galaxy'
 driver:
@@ -27,7 +28,9 @@ provisioner:
           - 'v1.0.0'
           - 'v1.0.0'
           - 'v1.0.0'
+          - 'v1.0.0'
         github_testing_archives:
+          - '{{ lookup("env", "MOLECULE_PROJECT_DIRECTORY") }}/molecule/files/test_archive_v1.0.0.tar.gz'
           - '{{ lookup("env", "MOLECULE_PROJECT_DIRECTORY") }}/molecule/files/test_archive_v1.0.0.tar.gz'
           - '{{ lookup("env", "MOLECULE_PROJECT_DIRECTORY") }}/molecule/files/test_archive_v1.0.0.tar.gz'
           - '{{ lookup("env", "MOLECULE_PROJECT_DIRECTORY") }}/molecule/files/test_archive_v1.0.0.tar.gz'

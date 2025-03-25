@@ -120,3 +120,27 @@
           - _github_archive == '/tmp/test_repo-v1.0.0.tar.gz'
           - _github_dir == '/opt/test_repo_gz_partial/test_repo-v1.0.0'
           - _github_remote_metadata is mapping
+
+    # Static URLs should override binary options without issue.
+    - name: 'Binary download | converge | binary | static URL | apply r_pufky.srv.github'
+      ansible.builtin.include_role:
+        name: 'r_pufky.srv.github'
+      vars:
+        github_binary_enable: true
+        github_binary_specifier: 'v'
+        github_binary_url: '{VERSION}/Binary.x86-64.tar.gz'
+        github_binary_static_url: 'https://example.com/alt/repo/binary.tar.gz'
+        github_repo_archive_type: 'tar.gz'
+        github_repo_owner: 'leetreleaser'
+        github_repo_repo: 'test_repo'
+        github_repo_release: 'latest'
+        github_extract_dest: '/opt/test_static'
+
+    - name: 'Binary download | converge | binary, specifier | partial URL | assert parameters'
+      ansible.builtin.assert:
+        that:
+          - _github_target == 'v1.0.0'
+          - _github_target_url == 'http://example.com/tar'  # Test injects.
+          - _github_archive == '/tmp/test_repo-v1.0.0.tar.gz'
+          - _github_dir == '/opt/test_static/test_repo-v1.0.0'
+          - _github_remote_metadata is mapping

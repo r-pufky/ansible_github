@@ -103,7 +103,7 @@
 - name: 'Prep | parse release metadata'
   ansible.builtin.set_fact:
     _github_target: '{{ _github_json.tag_name }}'
-    _github_target_url: '{{ _github_json.tarball_url if github_repo_archive_type.startswith("tar") else _github_json.zipball_url }}'
+    _github_target_url: '{{ _github_json.zipball_url if github_repo_archive_type.startswith("zip") else _github_json.tarball_url }}'
 
 - name: 'Prep | binary download'
   when: github_binary_enable and github_binary_static_url | length == 0

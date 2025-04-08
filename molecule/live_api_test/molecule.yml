@@ -29,7 +29,7 @@ provisioner:
         github_testing_enable: false
         github_live_api_enable: false
 platforms:
-  - name: 'debian-12-live_api_test'
+  - name: 'github-12-live_api_test'
     image: 'ghcr.io/hifis-net/debian-systemd:12'
     systemd: 'always'
     volumes:

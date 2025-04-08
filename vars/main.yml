@@ -2,6 +2,8 @@
 ###############################################################################
 # Github REST API
 ###############################################################################
+# TODO(sync): Keep features in sync with ansible_codeberg.
+#
 # Reference:
 # * https://docs.github.com/en/rest?api
 # * https://docs.github.com/en/rest/about-the-rest-api/api-versions

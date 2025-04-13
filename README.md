@@ -1,3 +1,9 @@
+## :warning: DEPRECATED.
+A modern version of this supports *checksum* validation, *GPG signature*
+validation, and *codeberg* as an additional remote repository source.
+
+[r_pufky.srv.repo](https://github.com/r-pufky/ansible_repo).
+
 # Github Release Download Manager
 Easily download and extract latest source releases from github repositories.
 
